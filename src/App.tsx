@@ -1,68 +1,48 @@
 import React, { useState } from "react";
 import "./App.css";
+import HandleClickPractice from "./HandleClickPractice";
+import PropPractice from "./PropPractice";
+import HandleChangePractice from "./HandleChangePractice";
+import HandleChangePractice2 from "./HandleChangePractice2";
+import HandleChangePractice3 from "./HandleChangePractice3";
+import HandleChangePractice4 from "./HandleChangePractice4";
+import logo from "./logo.svg";
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <LikeButton />
-        <Parent />
+        <img src={logo} className="App-logo" alt="logo" />
+        <HandleClickPractice />
+        <PropPractice />
+        <StateSample />
+        <HandleChangePractice />
+        <HandleChangePractice2 />
+        <HandleChangePractice3 />
+        <HandleChangePractice4 />
       </header>
     </div>
   );
 }
 
-function LikeButton() {
-  const [count, setCount] = useState(999);
-  const handleClick = () => {
-    setCount(count + 1);
-  };
+// ステートが持つオブジェクトの構造を型定義
+type Todo = {
+  id: number;
+  body: string;
+};
+
+const StateSample = () => {
+  // `Todo`という型に沿うオブジェクトの配列を、useStateのジェネリック型<T>として型指定（ Todo[] の部分）
+  const [todos, setTodos] = useState<Todo[]>([
+    { id: 1, body: "この記事を書き上げる" },
+  ]); // OK
+
   return (
-    <span className="likeButton" onClick={handleClick}>
-      ♥ {count}
-    </span>
-  );
-}
-
-// props として受け取る型の定義（`Props`部分の名前はどんな名前でも可）
-type PropsOnlyString = {
-  text: string;
-};
-
-// ① 型推論に任せるパターン
-const SampleComponent1 = () => {
-  return <div>Hello TypeScript!</div>;
-};
-
-// ③ props に直接型注釈を指定するパターン
-const SampleComponent2 = (props: PropsOnlyString) => {
-  return <div>Hello {props.text}!</div>;
-};
-
-type PropsWithChildren = {
-  text: string;
-  children: React.ReactNode;
-};
-
-const SampleComponent3 = (props: PropsWithChildren) => {
-  return (
-    <div>
-      <h1>Hello {props.text}!</h1>
-      <p>{props.children}</p>
-    </div>
-  );
-};
-/* ---------- 呼び出す側 ---------- */
-const Parent = () => {
-  return (
-    <div>
-      {/* ③も④も結果は同じ。propsが不足していたり型が違うものを渡すなどするとエラーになる */}
-      <SampleComponent1 />
-      <SampleComponent2 text="SampleComponent2 does not need children" />
-      <SampleComponent3 text="SampleComponent2 needs children">
-        this is children for SampleComponent3
-      </SampleComponent3>
-    </div>
+    <ul>
+      {todos.map((item: Todo) => {
+        return <li key={item.id}>{item.body}</li>;
+      })}
+    </ul>
   );
 };
 
